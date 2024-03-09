@@ -9,7 +9,6 @@ import (
 type ConfigStore struct {
 	DB         Connection
 	QB         *squirrel.StatementBuilderType
-	RequireTX  bool
 	TableName  string
 	TableAlias string
 	Input      *[]any

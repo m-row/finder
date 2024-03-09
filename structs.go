@@ -8,7 +8,6 @@ import (
 const ZeroedUUID = "00000000-0000-0000-0000-000000000000"
 
 var (
-	ErrRequiresTransaction    = errors.New("requires a transaction")
 	ErrNoProvidedID           = errors.New("no provided id")
 	ErrSelectNotAPointerSlice = errors.New(
 		"selects must be a pointer to []string",
