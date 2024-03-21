@@ -2,6 +2,7 @@ package finder
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/Masterminds/squirrel"
 )
@@ -11,6 +12,7 @@ type ConfigDelete struct {
 	QB         *squirrel.StatementBuilderType
 	TableName  string
 	TableAlias string
+	IDColumn   *string
 	Selects    *[]string
 	Joins      *[]string
 	Wheres     *[]squirrel.Sqlizer
@@ -33,8 +35,13 @@ func DeleteOne(deleted Model, c *ConfigDelete) error {
 
 	subquery := c.QB.
 		Delete(c.TableName).
-		Suffix("RETURNING *").
-		Where("id=?", id)
+		Suffix("RETURNING *")
+	if c.IDColumn != nil {
+		w := fmt.Sprintf("%s=?", *c.IDColumn)
+		subquery = subquery.Where(w, id)
+	} else {
+		subquery = subquery.Where("id=?", id)
+	}
 	if c.Wheres != nil {
 		if len(*c.Wheres) != 0 {
 			for _, where := range *c.Wheres {

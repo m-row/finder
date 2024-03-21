@@ -2,6 +2,7 @@ package finder
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/Masterminds/squirrel"
 )
@@ -16,6 +17,7 @@ type ConfigUpdate struct {
 	QB             *squirrel.StatementBuilderType
 	TableName      string
 	TableAlias     string
+	IDColumn       *string
 	OptimisticLock *OptimisticLock
 	Input          *[]any
 	Inserts        *[]string
@@ -49,8 +51,13 @@ func UpdateOne(updated Model, c *ConfigUpdate) error {
 
 	subquery := c.QB.
 		Update(c.TableName).
-		Suffix("RETURNING *").
-		Where("id=?", id)
+		Suffix("RETURNING *")
+	if c.IDColumn != nil {
+		w := fmt.Sprintf("%s=?", *c.IDColumn)
+		subquery = subquery.Where(w, id)
+	} else {
+		subquery = subquery.Where("id=?", id)
+	}
 	if c.OptimisticLock != nil {
 		subquery = subquery.Where(
 			c.OptimisticLock.Name+" = ?",
