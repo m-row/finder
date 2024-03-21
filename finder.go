@@ -214,7 +214,12 @@ func find(c *configFinder) error { //nolint: gocyclo,maintidx // unavoidable
 		}
 	}
 
-	sorts := sortBuilder(tableName, c.UrlQuery.Sorts, c.Meta.Columns)
+	sorts := sortBuilder(
+		tableName,
+		c.UrlQuery.Sorts,
+		c.IDColumn,
+		c.Meta.Columns,
+	)
 	if sorts != "" {
 		*c.Results = c.Results.OrderByClause(sorts)
 	}

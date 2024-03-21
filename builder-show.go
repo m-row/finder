@@ -2,6 +2,7 @@ package finder
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/Masterminds/squirrel"
 )
@@ -9,6 +10,7 @@ import (
 type ConfigShow struct {
 	DB         Connection
 	QB         *squirrel.StatementBuilderType
+	IDColumn   *string
 	TableName  string
 	TableAlias string
 	// IsPublic specifically used to check where table_name.is_disabled field
@@ -42,7 +44,12 @@ func ShowOne(shown Model, c *ConfigShow) error {
 		From(c.TableName)
 
 	if !noID {
-		result = result.Where(c.TableAlias+".id=?", id)
+		if c.IDColumn != nil {
+			w := fmt.Sprintf("%s.%s=?", c.TableAlias, *c.IDColumn)
+			result = result.Where(w, id)
+		} else {
+			result = result.Where(c.TableAlias+".id=?", id)
+		}
 	}
 
 	if c.Wheres != nil {

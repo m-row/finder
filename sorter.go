@@ -1,12 +1,17 @@
 package finder
 
 import (
+	"fmt"
 	"slices"
 	"strings"
 )
 
 // sortBuilder returns a string containing confirmed sorts only.
-func sortBuilder(tableAlias, urlSorts string, columns *[]string) string {
+func sortBuilder(
+	tableAlias, urlSorts string,
+	idColumn *string,
+	columns *[]string,
+) string {
 	var sortsString string
 
 	sortsString = strings.ReplaceAll(urlSorts, " ", "")
@@ -20,11 +25,12 @@ func sortBuilder(tableAlias, urlSorts string, columns *[]string) string {
 	// In case no sort is provided it defaults to -created_at or -id
 	if len(sortsArr) == 1 && sortsArr[0] == "" {
 		var orderBy string
-		confirmCreatedAt := slices.Contains(*columns, "created_at")
-		if confirmCreatedAt {
+		if slices.Contains(*columns, "created_at") {
 			orderBy = tableAlias + ".created_at DESC"
-		} else {
+		} else if slices.Contains(*columns, "id") {
 			orderBy = tableAlias + ".id DESC"
+		} else if idColumn != nil {
+			orderBy = fmt.Sprintf("%s.%s DESC", tableAlias, *idColumn)
 		}
 		verifiedSortsArr = append(verifiedSortsArr, orderBy)
 	}

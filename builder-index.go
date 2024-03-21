@@ -22,6 +22,7 @@ type ConfigIndex struct {
 	//  '2024-01-16T00:00:00Z'::TIMESTAMP AT TIME ZONE 'UTC',
 	//  '2024-01-19T23:59:59Z'::TIMESTAMP AT TIME ZONE 'UTC'
 	// )
+	IDColumn  *string
 	Timezone  *string
 	FromToCol *string
 	DB        Connection
@@ -47,6 +48,7 @@ type configFinder struct {
 	Meta      *Meta
 	Model     Model
 	Results   *squirrel.SelectBuilder
+	IDColumn  *string
 	Timezone  *string
 	UrlQuery  *URLQuery
 	UrlValues *url.Values
@@ -94,6 +96,7 @@ func IndexBuilder[T Model](
 		Meta:      &meta,
 		Model:     model,
 		Results:   &results,
+		IDColumn:  c.IDColumn,
 		Timezone:  c.Timezone,
 		UrlQuery:  &URLQuery{},
 		UrlValues: &urlValues,
