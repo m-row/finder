@@ -51,7 +51,11 @@ func filterer(
 			if len(*relations) > 0 {
 				for _, rel := range *relations {
 					if rel.Table == filterArgs[0] {
-						if rel.Join != nil {
+						partOfRelation = true
+						currentRelation = rel
+						if rel.Join == nil {
+							filterArgs[0] = rel.Table + ".id"
+						} else {
 							partOfRelation = true
 							currentRelation = rel
 							filterArgs[0] = rel.Join.To
