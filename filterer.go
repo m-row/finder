@@ -104,7 +104,8 @@ func filterer(
 						currFilter.criteria = tableAlias + "." + filterArgs[0]
 					}
 
-					if filterArgs[1] == "null" {
+					switch filterArgs[1] {
+					case "null":
 						if currentRelation.Join != nil &&
 							currentRelation.Through != nil {
 							countString := fmt.Sprintf(
@@ -117,7 +118,20 @@ func filterer(
 						}
 						currFilter.op = "na"
 						currFilter.input = ""
-					} else {
+					case "not-null":
+						if currentRelation.Join != nil &&
+							currentRelation.Through != nil {
+							countString := fmt.Sprintf(
+								`(select count(*) from %s where %s = %s) > 0`,
+								currentRelation.Through.Table,
+								currentRelation.Through.Join.From,
+								currentRelation.Join.From,
+							)
+							*results = results.Where(countString)
+						}
+						currFilter.op = "nn"
+						currFilter.input = ""
+					default:
 						currFilter.op = "="
 						currFilter.input = filterArgs[1]
 					}

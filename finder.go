@@ -90,6 +90,8 @@ func find(c *configFinder) error { //nolint: gocyclo,maintidx // unavoidable
 				}
 			case "na":
 				*c.Results = c.Results.Where(squirrel.Eq{v.criteria: nil})
+			case "nn":
+				*c.Results = c.Results.Where(squirrel.NotEq{v.criteria: nil})
 			default:
 				*c.Results = c.Results.Where(squirrel.Eq{v.criteria: v.values})
 			}
