@@ -1,6 +1,8 @@
 # Finder - an index builder for REST APIs
 
 built on [squirrel](https://github.com/Masterminds/squirrel) Query Builder
+check the [finder-example](https://github.com/m-row/finder-example) for details
+on usage
 
 - [x] searchable
 - [x] filterable
