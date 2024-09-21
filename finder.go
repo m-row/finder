@@ -163,7 +163,7 @@ func find(c *configFinder) error { //nolint: gocyclo,maintidx // unavoidable
 		if c.Timezone != nil {
 			timezone = *c.Timezone
 		}
-		loc, err := time.LoadLocation(*c.Timezone)
+		loc, err := time.LoadLocation(timezone)
 		if err != nil {
 			return err
 		}
