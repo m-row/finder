@@ -154,6 +154,8 @@ func filterer(
 						filterArgs[1] = "<"
 					case "lte":
 						filterArgs[1] = "<="
+					case "bw":
+						filterArgs[1] = "BETWEEN"
 					case "ex": // exactly - returns row that has 1 of relation
 						if currentRelation.Join != nil &&
 							currentRelation.Through != nil {

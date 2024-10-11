@@ -88,6 +88,12 @@ func find(c *configFinder) error { //nolint: gocyclo,maintidx // unavoidable
 					*c.Results = c.Results.
 						Where(squirrel.LtOrEq{v.criteria: v.values[0]})
 				}
+			case "BETWEEN":
+				if len(v.values) == 2 {
+					*c.Results = c.Results.
+						Where(squirrel.GtOrEq{v.criteria: v.values[0]}).
+						Where(squirrel.LtOrEq{v.criteria: v.values[1]})
+				}
 			case "na":
 				*c.Results = c.Results.Where(squirrel.Eq{v.criteria: nil})
 			case "nn":
