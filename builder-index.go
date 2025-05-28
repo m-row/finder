@@ -42,16 +42,17 @@ type ConfigIndex struct {
 }
 
 type configFinder struct {
-	FromToCol *string
-	GroupBys  *[]string
-	IsPublic  bool
-	Meta      *Meta
-	Model     Model
-	Results   *squirrel.SelectBuilder
-	IDColumn  *string
-	Timezone  *string
-	UrlQuery  *URLQuery
-	UrlValues *url.Values
+	FromToCol    *string
+	GroupBys     *[]string
+	IsPublic     bool
+	Meta         *Meta
+	Model        Model
+	Results      *squirrel.SelectBuilder
+	IDColumn     *string
+	Timezone     *string
+	UrlQuery     *URLQuery
+	UrlValues    *url.Values
+	OverrideSort string
 }
 
 func IndexBuilder[T Model](

@@ -232,6 +232,10 @@ func find(c *configFinder) error { //nolint: gocyclo,maintidx // unavoidable
 		*c.Results = c.Results.OrderByClause(sorts)
 	}
 
+	if c.OverrideSort != "" {
+		*c.Results = c.Results.OrderByClause(c.OverrideSort)
+	}
+
 	if c.GroupBys != nil {
 		if len(*c.GroupBys) > 0 {
 			*c.Results = c.Results.

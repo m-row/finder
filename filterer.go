@@ -32,8 +32,7 @@ func filterer(
 ) []filterOp {
 	var filtersArr []filterOp
 
-	filters = strings.ReplaceAll(filters, ";", "")
-	filters = strings.ReplaceAll(filters, "\\", "")
+	filters = strings.NewReplacer(";", "", "\\", "").Replace(filters)
 
 	filtersSplit := strings.Split(filters, ",")
 
