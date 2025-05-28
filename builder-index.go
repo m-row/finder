@@ -3,6 +3,7 @@ package finder
 import (
 	"context"
 	"errors"
+	"log"
 	"net/url"
 
 	"github.com/Masterminds/squirrel"
@@ -42,6 +43,8 @@ type ConfigIndex struct {
 
 	// OverrideSort used to write the OrderBy string directly
 	OverrideSort string
+	// Debug prints the built query to console if enabled
+	Debug bool
 }
 
 type configFinder struct {
@@ -142,6 +145,22 @@ func IndexBuilder[T Model](
 		ToSql()
 	if err != nil {
 		return nil, err
+	}
+	if c.Debug {
+		log.Println(
+			`
+QUERY -------------------------------------------------------------------------\n
+            `,
+			query,
+			`
+ARGS --------------------------------------------------------------------------\n
+            `,
+			args,
+
+			`
+Err ---------------------------------------------------------------------------\n
+            `,
+			err)
 	}
 	if err := c.DB.
 		SelectContext(
