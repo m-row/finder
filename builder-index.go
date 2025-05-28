@@ -39,6 +39,9 @@ type ConfigIndex struct {
 	// PGInfo contains a map of table names
 	// each key will have string slice containing sorted columns
 	PGInfo map[string][]string
+
+	// OverrideSort used to write the OrderBy string directly
+	OverrideSort string
 }
 
 type configFinder struct {
@@ -92,16 +95,17 @@ func IndexBuilder[T Model](
 	meta.Columns = model.Columns(c.PGInfo)
 
 	cf := &configFinder{
-		GroupBys:  c.GroupBys,
-		IsPublic:  c.IsPublic,
-		Meta:      &meta,
-		Model:     model,
-		Results:   &results,
-		IDColumn:  c.IDColumn,
-		Timezone:  c.Timezone,
-		UrlQuery:  &URLQuery{},
-		UrlValues: &urlValues,
-		FromToCol: c.FromToCol,
+		GroupBys:     c.GroupBys,
+		IsPublic:     c.IsPublic,
+		Meta:         &meta,
+		Model:        model,
+		Results:      &results,
+		IDColumn:     c.IDColumn,
+		Timezone:     c.Timezone,
+		UrlQuery:     &URLQuery{},
+		UrlValues:    &urlValues,
+		FromToCol:    c.FromToCol,
+		OverrideSort: c.OverrideSort,
 	}
 	if err := find(cf); err != nil {
 		return nil, err
