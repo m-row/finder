@@ -48,6 +48,8 @@ type ConfigIndex struct {
 }
 
 type configFinder struct {
+	DB           Connection
+	QB           *squirrel.StatementBuilderType
 	FromToCol    *string
 	GroupBys     *[]string
 	IsPublic     bool
@@ -98,6 +100,8 @@ func IndexBuilder[T Model](
 	meta.Columns = model.Columns(c.PGInfo)
 
 	cf := &configFinder{
+		DB:           c.DB,
+		QB:           c.QB,
 		GroupBys:     c.GroupBys,
 		IsPublic:     c.IsPublic,
 		Meta:         &meta,
@@ -109,6 +113,9 @@ func IndexBuilder[T Model](
 		UrlValues:    &urlValues,
 		FromToCol:    c.FromToCol,
 		OverrideSort: c.OverrideSort,
+	}
+	if err := rawTotal(cf); err != nil {
+		return nil, err
 	}
 	if err := find(cf); err != nil {
 		return nil, err

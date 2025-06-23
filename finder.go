@@ -144,7 +144,7 @@ func find(c *configFinder) error { //nolint: gocyclo,maintidx // unavoidable
 		}
 
 		finalSearchQuery := "("
-		var searchArgs []interface{}
+		var searchArgs []any
 
 		for index, v := range searchSQL {
 			query, args, err := v.ToSql()

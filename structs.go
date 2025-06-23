@@ -41,6 +41,7 @@ func ErrInputLengthMismatch(input *[]any, defaultCols *[]string) error {
 }
 
 type Meta struct {
+	RawTotal      uint64    `json:"raw_total"`
 	Total         uint64    `json:"total"`
 	Paginate      uint64    `json:"per_page"`
 	CurrentPage   uint64    `json:"current_page"`
