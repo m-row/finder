@@ -228,7 +228,7 @@ func find(c *configFinder) error { //nolint: gocyclo,maintidx // unavoidable
 		c.IDColumn,
 		c.Meta.Columns,
 	)
-	if sorts != "" {
+	if sorts != "" && c.OverrideSort == "" {
 		*c.Results = c.Results.OrderByClause(sorts)
 	}
 
