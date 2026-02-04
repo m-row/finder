@@ -150,8 +150,6 @@ func IndexBuilder[T Model](
 	// build meta and query the results ---------------------------------------
 	metaBuilder(&meta, cf.UrlQuery)
 
-	indexResponse.SelectBuilder = &results
-
 	query, args, err := results.
 		Limit(meta.Paginate).
 		Offset(meta.From - 1).
@@ -159,6 +157,8 @@ func IndexBuilder[T Model](
 	if err != nil {
 		return nil, err
 	}
+	indexResponse.Query = &query
+	indexResponse.Args = &args
 	if err := c.DB.
 		SelectContext(
 			context.Background(),

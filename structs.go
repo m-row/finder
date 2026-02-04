@@ -3,8 +3,6 @@ package finder
 import (
 	"errors"
 	"fmt"
-
-	"github.com/Masterminds/squirrel"
 )
 
 const ZeroedUUID = "00000000-0000-0000-0000-000000000000"
@@ -56,9 +54,8 @@ type Meta struct {
 }
 
 type IndexResponse[T any] struct {
-	// SelectBuilder is reference to the builder before converting to sql
-	// can be used to debug or log the sql,args,err from the app using it
-	SelectBuilder *squirrel.SelectBuilder `json:"-"`
+	Query *string `json:"-"`
+	Args  *[]any  `json:"-"`
 
 	Meta *Meta `json:"meta"`
 	Data *[]T  `json:"data"`
