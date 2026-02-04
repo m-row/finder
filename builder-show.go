@@ -18,6 +18,7 @@ type ConfigShow struct {
 	IsPublic bool
 	Selects  *[]string
 	Joins    *[]string
+	CTEs     *[]string
 	Wheres   *[]squirrel.Sqlizer
 }
 
@@ -59,9 +60,11 @@ func ShowOne(shown Model, c *ConfigShow) error {
 			}
 		}
 	}
+
 	if c.IsPublic {
 		result = result.Where(c.TableAlias + ".is_disabled=false")
 	}
+
 	if c.Joins != nil {
 		if len(*c.Joins) > 0 {
 			for _, join := range *c.Joins {
@@ -69,6 +72,13 @@ func ShowOne(shown Model, c *ConfigShow) error {
 			}
 		}
 	}
+
+	if c.CTEs != nil {
+		for _, cte := range *c.CTEs {
+			result = result.Prefix(cte)
+		}
+	}
+
 	query, args, err := result.ToSql()
 	if err != nil {
 		return err
