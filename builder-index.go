@@ -3,7 +3,6 @@ package finder
 import (
 	"context"
 	"errors"
-	"log"
 	"net/url"
 
 	"github.com/Masterminds/squirrel"
@@ -35,6 +34,7 @@ type ConfigIndex struct {
 	Joins    *[]string
 	Selects  *[]string
 	GroupBys *[]string
+	CTEs     *[]string
 	Wheres   *[]squirrel.Sqlizer
 
 	// PGInfo contains a map of table names
@@ -43,8 +43,6 @@ type ConfigIndex struct {
 
 	// OverrideSort used to write the OrderBy string directly
 	OverrideSort string
-	// Debug prints the built query to console if enabled
-	Debug bool
 }
 
 type configFinder struct {
@@ -91,6 +89,12 @@ func IndexBuilder[T Model](
 			for _, where := range *c.Wheres {
 				results = results.Where(where)
 			}
+		}
+	}
+
+	if c.CTEs != nil {
+		for _, cte := range *c.CTEs {
+			results = results.Prefix(cte)
 		}
 	}
 
@@ -146,28 +150,14 @@ func IndexBuilder[T Model](
 	// build meta and query the results ---------------------------------------
 	metaBuilder(&meta, cf.UrlQuery)
 
+	indexResponse.SelectBuilder = &results
+
 	query, args, err := results.
 		Limit(meta.Paginate).
 		Offset(meta.From - 1).
 		ToSql()
 	if err != nil {
 		return nil, err
-	}
-	if c.Debug {
-		log.Println(
-			`
-QUERY -------------------------------------------------------------------------\n
-            `,
-			query,
-			`
-ARGS --------------------------------------------------------------------------\n
-            `,
-			args,
-
-			`
-Err ---------------------------------------------------------------------------\n
-            `,
-			err)
 	}
 	if err := c.DB.
 		SelectContext(

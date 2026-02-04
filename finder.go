@@ -143,26 +143,28 @@ func find(c *configFinder) error { //nolint: gocyclo,maintidx // unavoidable
 			}
 		}
 
-		finalSearchQuery := "("
+		var finalSearchQuery strings.Builder
+		finalSearchQuery.WriteString("(")
 		var searchArgs []any
 
 		for index, v := range searchSQL {
 			query, args, err := v.ToSql()
 			if err == nil {
 				searchArgs = append(searchArgs, args...)
-				finalSearchQuery += query
+				finalSearchQuery.WriteString(query)
 
 				if index < len(searchSQL)-1 {
-					finalSearchQuery += " OR "
+					finalSearchQuery.WriteString(" OR ")
 				} else {
-					finalSearchQuery += ")"
+					finalSearchQuery.WriteString(")")
 				}
 			}
 		}
-		*c.Results = c.Results.Where(finalSearchQuery, searchArgs...)
+		*c.Results = c.Results.Where(finalSearchQuery.String(), searchArgs...)
 	}
 
 	// from / to queries -------------- ---------------------------------------
+
 	hasFrom := c.UrlValues.Has("from")
 	if hasFrom {
 		timezone := "UTC"
